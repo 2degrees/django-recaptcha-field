@@ -72,11 +72,8 @@ class _RecaptchaField(Field):
     def validate(self, value):
         super(_RecaptchaField, self).validate(value)
         
-        challenge_id = value['challenge_id']
-        if not challenge_id:
-            raise ValidationError(self.error_messages['invalid'])
-        
         solution_text = value['solution_text']
+        challenge_id = value['challenge_id']
         try:
             is_solution_correct = self.recaptcha_client.is_solution_correct(
                 solution_text,
