@@ -14,9 +14,11 @@
 #
 ################################################################################
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.forms.fields import Field
 from django.forms.widgets import Widget
+from recaptcha import RECAPTCHA_CHARACTER_ENCODING
 from recaptcha import RecaptchaInvalidChallengeError
 
 
@@ -72,8 +74,8 @@ class _RecaptchaField(Field):
     def validate(self, value):
         super(_RecaptchaField, self).validate(value)
         
-        solution_text = value['solution_text']
-        challenge_id = value['challenge_id']
+        solution_text = _encode_input_for_recaptcha(value['solution_text'])
+        challenge_id = _encode_input_for_recaptcha(value['challenge_id'])
         try:
             is_solution_correct = self.recaptcha_client.is_solution_correct(
                 solution_text,
@@ -117,3 +119,15 @@ class _RecaptchaWidget(Widget):
             self.transmit_challenge_over_ssl,
             )
         return challenge_markup
+
+
+#{ Utiltities
+
+
+def _encode_input_for_recaptcha(string):
+    string_bytes = string.decode(settings.DEFAULT_CHARSET)
+    string_encoded = string_bytes.encode(RECAPTCHA_CHARACTER_ENCODING)
+    return string
+
+
+#}
