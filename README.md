@@ -1,2 +1,0 @@
-django-recaptcha-field
-======================
