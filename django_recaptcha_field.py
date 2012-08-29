@@ -30,6 +30,18 @@ def create_form_subclass_with_recaptcha(
     recaptcha_client,
     additional_field_kwargs=None,
     ):
+    """
+    Create a subclass of ``base_form_class`` with an extra field for the
+    reCAPTCHA challenge.
+    
+    :param base_form_class: The parent form class
+    :param recaptcha_client:
+    :type recaptcha_client: :class:`recaptcha.RecaptchaClient`
+    :param additional_field_kwargs: Any additional arguments for the
+        constructor of the form field
+    :type additional_field_kwargs: :class:`dict`
+    
+    """
     
     additional_field_kwargs = additional_field_kwargs or {}
     
