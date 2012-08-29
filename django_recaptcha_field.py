@@ -86,6 +86,7 @@ class _RecaptchaField(Field):
             raise ValidationError(self.error_messages['invalid'])
         
         if not is_solution_correct:
+            self.widget.was_previous_solution_incorrect = True
             raise ValidationError(self.error_messages['incorrect_solution'])
 
 

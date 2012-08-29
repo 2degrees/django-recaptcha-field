@@ -229,6 +229,12 @@ class TestFieldValidation(object):
         expected_error_message = force_unicode(field.error_messages[error_code])
         with assert_raises_regexp(ValidationError, expected_error_message):
             field.validate(field_value)
+        
+        should_mark_solution_as_incorrect = error_code == 'incorrect_solution'
+        eq_(
+            should_mark_solution_as_incorrect,
+            field.widget.was_previous_solution_incorrect,
+            )
     
     #}
 
