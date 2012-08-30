@@ -48,7 +48,7 @@ setup(
     license='BSD (http://dev.2degreesnetwork.com/p/2degrees-license.html)',
     py_modules=['django_recaptcha_field'],
     zip_safe=False,
-    install_requires=['django >= 1.3', 'recaptcha'],
+    install_requires=['django >= 1.3', 'recaptcha >= 1.0rc1'],
     tests_require=['coverage', 'nose'],
     test_suite='nose.collector',
     )
