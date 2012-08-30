@@ -27,7 +27,8 @@ _version = open(os.path.join(_branch_path, 'VERSION.txt')).readline().rstrip()
 setup(
     name='django-recaptcha-field',
     version=_version,
-    description='Pythonic, well documented and fully featured reCAPTCHA client',
+    description='Easy-to-use, highly extensible and well documented reCAPTCHA '
+        'plugin for Django forms',
     long_description=_readme,
     classifiers=[
         'Development Status :: 4 - Beta',
