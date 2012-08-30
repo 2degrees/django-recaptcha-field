@@ -38,7 +38,7 @@ derivative form class with a reCAPTCHA field like so::
         recaptcha_client,
         )
 
-Except for the widget and the requireness of the field, you can override
+Except for the widget and the required state of the field, you can override
 other field attributes such as the label and the error messages::
 
     MyRecaptchaProtectedForm = create_form_subclass_with_recaptcha(
