@@ -184,7 +184,7 @@ class TestFieldValidation(object):
         field_value = None
         
         self._assert_validation_error_raised(field_value, client, 'required')
-        eq_(0, client.communication_attemps)
+        eq_(0, client.communication_attempts)
     
     def test_invalid_challenge_id(self):
         client = _ExceptionRaisingVerificationClient(
@@ -249,13 +249,13 @@ class _OfflineVerificationClient(object):
         
         self.is_solution_correct_ = is_solution_correct
         
-        self.communication_attemps = 0
+        self.communication_attempts = 0
         
         self.solution_text = None
         self.challenge_id = None
     
     def is_solution_correct(self, solution_text, challenge_id, remote_ip):
-        self.communication_attemps += 1
+        self.communication_attempts += 1
         
         self.solution_text = solution_text
         self.challenge_id = challenge_id
