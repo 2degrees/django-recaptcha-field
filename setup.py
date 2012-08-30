@@ -20,7 +20,7 @@ from setuptools import setup
 
 
 _branch_path = os.path.abspath(os.path.dirname(__file__))
-_readme = open(os.path.join(_branch_path, 'README.md')).read()
+_readme = open(os.path.join(_branch_path, 'README.txt')).read()
 _version = open(os.path.join(_branch_path, 'VERSION.txt')).readline().rstrip()
 
 
