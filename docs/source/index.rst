@@ -118,8 +118,8 @@ Presentation
 ------------
 
 The form subclass created by :func:`create_form_subclass_with_recaptcha` has a
-field named `recaptcha` the behaves like any other field. Use the `safe
-<https://docs.djangoproject.com/en/stable/ref/templates/builtins/>`_ filter to 
+field named ``recaptcha`` the behaves like any other field. Use the `safe
+<https://docs.djangoproject.com/en/stable/ref/templates/builtins/#safe>`_ filter to 
 display the field::
 
     <form action="..." method="...">
