@@ -117,6 +117,18 @@ form subclasses may look like this::
 Presentation
 ------------
 
+The form subclass created by :func:`create_form_subclass_with_recaptcha` has a
+field named ``recaptcha`` the behaves like any other field. Use the `safe
+<https://docs.djangoproject.com/en/stable/ref/templates/builtins/#safe>`_ filter to 
+display the field::
+
+    <form action="..." method="...">
+        ...
+        {{ form.recaptcha | safe }}
+        {{ form.recaptcha.errors }}
+        ...
+    </form>
+
 The widget for the reCAPTCHA field will make sure that the reCAPTCHA challenge
 is transmitted over SSL if the request was made over SSL, and vice versa.
 
