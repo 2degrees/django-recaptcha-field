@@ -35,7 +35,7 @@ __all__ = [
 
 
 class TestFormSubclass(object):
-    
+
     def test_inheritance(self):
         """The resulting form class is a subclass of the original form class"""
         ok_(
@@ -44,60 +44,60 @@ class TestFormSubclass(object):
                 _MockRegistrationForm,
                 ),
             )
-    
+
     def test_initialization(self):
         """
         The original form class still gets all the arguments it'd normally get
         at initialization.
-        
+
         """
         request = _MockHttpRequest()
         form_data = object()
         form_files = object()
-        
+
         form = _MockRecaptchaProtectedRegistrationForm(
             request,
             form_data,   # Consider positional arguments
             files=form_files,   # Consider named arguments
             )
-        
+
         eq_(form_data, form.data)
         eq_(form_files, form.files)
 
 
 class TestFieldInitialization(object):
-    
+
     def test_ssl_request(self):
         """
         The widget uses SSL for the transmission of the challenge if the current
         request was made over SSL.
-        
+
         """
         ssl_request = _MockHttpRequest(is_ssl_used=True)
         form = _MockRecaptchaProtectedRegistrationForm(ssl_request)
-        
+
         recaptcha_widget = form.fields['recaptcha'].widget
         ok_(recaptcha_widget.transmit_challenge_over_ssl)
-    
+
     def test_non_ssl_request(self):
         """
         The widget doesn't use SSL for the transmission of the challenge if the
         current request wasn't made over SSL.
-        
+
         """
         non_ssl_request = _MockHttpRequest(is_ssl_used=False)
         form = _MockRecaptchaProtectedRegistrationForm(non_ssl_request)
-        
+
         recaptcha_widget = form.fields['recaptcha'].widget
         assert_false(recaptcha_widget.transmit_challenge_over_ssl)
-    
+
     def test_remote_ip(self):
         request = _MockHttpRequest(remote_addr=RANDOM_REMOTE_IP)
         form = _MockRecaptchaProtectedRegistrationForm(request)
-        
+
         recaptcha_field = form.fields['recaptcha']
         eq_(RANDOM_REMOTE_IP, recaptcha_field.remote_ip)
-    
+
     def test_additional_field_arguments(self):
         field_label = 'Are you human?'
         form_class = create_form_subclass_with_recaptcha(
@@ -106,7 +106,7 @@ class TestFieldInitialization(object):
             additional_field_kwargs={'label': field_label},
             )
         form = form_class(_MockHttpRequest())
-        
+
         recaptcha_field = form.fields['recaptcha']
         eq_(field_label, recaptcha_field.label)
 
@@ -115,13 +115,13 @@ class TestFieldInitialization(object):
 
 
 class _MockHttpRequest(HttpRequest):
-    
+
     def __init__(self, is_ssl_used=False, remote_addr=None):
         super(_MockHttpRequest, self).__init__()
-        
+
         self.is_ssl_used = is_ssl_used
         self.META['REMOTE_ADDR'] = remote_addr
-    
+
     def is_secure(self):
         return self.is_ssl_used
 
@@ -129,7 +129,7 @@ class _MockHttpRequest(HttpRequest):
 class _MockRegistrationForm(Form):
 
     full_name = CharField(max_length=255)
-    
+
     email_address = EmailField(max_length=255)
 
 
