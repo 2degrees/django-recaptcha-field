@@ -14,3 +14,12 @@
 #
 ################################################################################
 """Fake Django settings module."""
+
+from django.utils.crypto import get_random_string
+
+def _create_secret_key():
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+    secret_key = get_random_string(50, chars)
+    return secret_key
+
+SECRET_KEY = _create_secret_key()
