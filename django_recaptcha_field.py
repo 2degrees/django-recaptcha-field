@@ -18,6 +18,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.forms.fields import Field
 from django.forms.widgets import Widget
+from django.utils.encoding import force_unicode
 from recaptcha import RECAPTCHA_CHARACTER_ENCODING
 from recaptcha import RecaptchaInvalidChallengeError
 
@@ -134,12 +135,15 @@ class _RecaptchaWidget(Widget):
         return challenge_markup
 
 
-#{ Utiltities
+#{ Utilities
 
 
 def _encode_input_for_recaptcha(string):
-    string_bytes = string.decode(settings.DEFAULT_CHARSET)
-    string_encoded = string_bytes.encode(RECAPTCHA_CHARACTER_ENCODING)
+    string_encoded = force_unicode(
+        string,
+        settings.DEFAULT_CHARSET,
+        errors='replace',
+        )
     return string_encoded
 
 

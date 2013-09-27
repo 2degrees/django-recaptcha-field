@@ -21,6 +21,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.encoding import force_unicode
 from nose.tools import assert_false
+from nose.tools import assert_is_none
 from nose.tools import assert_not_equals
 from nose.tools import assert_raises
 from nose.tools import assert_raises_regexp
@@ -43,6 +44,9 @@ __all__ = [
     'TestFieldValidation',
     'TestWidgetInitialization',
     ]
+
+
+_UNICODE_REPLACEMENT_CHARACTER = u'\ufffd'
 
 
 _RANDOM_RECAPTCHA_FIELD_VALUE = {
@@ -107,31 +111,56 @@ class TestFieldValueConversion(object):
             settings.DEFAULT_CHARSET,
             )
 
-        random_string_utf8 = u'profesión'.encode('UTF-8')
-        random_string_bytes = random_string_utf8.decode('UTF-8')
+        random_string_unicode = u'profesión'
         random_string_unsupported = \
-            random_string_bytes.encode(settings.DEFAULT_CHARSET)
+            random_string_unicode.encode(settings.DEFAULT_CHARSET)
         field_value = {
             'solution_text': random_string_unsupported,
             'challenge_id': random_string_unsupported,
             }
 
         self.field.validate(field_value)
-        eq_(random_string_utf8, self.recaptcha_client.solution_text)
-        eq_(random_string_utf8, self.recaptcha_client.challenge_id)
+        eq_(random_string_unicode, self.recaptcha_client.solution_text)
+        eq_(random_string_unicode, self.recaptcha_client.challenge_id)
 
     def test_unicode_value_in_supported_codec(self):
         settings.DEFAULT_CHARSET = RECAPTCHA_CHARACTER_ENCODING
 
-        random_unicode_string = u'profesión'.encode(settings.DEFAULT_CHARSET)
+        random_unicode_string = u'profesión'
+        random_unicode_byte_string = \
+            random_unicode_string.encode(settings.DEFAULT_CHARSET)
         field_value = {
-            'solution_text': random_unicode_string,
-            'challenge_id': random_unicode_string,
+            'solution_text': random_unicode_byte_string,
+            'challenge_id': random_unicode_byte_string,
             }
 
         self.field.validate(field_value)
         eq_(random_unicode_string, self.recaptcha_client.solution_text)
         eq_(random_unicode_string, self.recaptcha_client.challenge_id)
+
+    def test_unicode_value_not_in_supported_codec(self):
+        settings.DEFAULT_CHARSET = RECAPTCHA_CHARACTER_ENCODING
+
+        random_unicode_string = unichr(144)
+        random_unicode_byte_string = random_unicode_string.encode('Latin-1')
+        field_value = {
+            'solution_text': random_unicode_byte_string,
+            'challenge_id': random_unicode_byte_string,
+            }
+
+        solution_unicode_string = _UNICODE_REPLACEMENT_CHARACTER
+        self.field.validate(field_value)
+        eq_(solution_unicode_string, self.recaptcha_client.solution_text)
+        eq_(solution_unicode_string, self.recaptcha_client.challenge_id)
+
+    def test_unicode_characters(self):
+        random_string_unicode = u'абвгд'
+        field_value = {
+            'solution_text': random_string_unicode,
+            'challenge_id': random_string_unicode,
+            }
+
+        assert_is_none(self.field.validate(field_value))
 
     def test_ascii_value(self):
         eq_(
